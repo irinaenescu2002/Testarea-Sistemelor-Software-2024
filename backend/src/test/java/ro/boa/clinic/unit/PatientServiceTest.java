@@ -24,8 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PatientServiceTest {
     @InjectMocks
     private PatientService patientService;
+
     @Mock
     private AccountService accountService;
+
     @Mock
     private PatientRepository patientRepository;
 
