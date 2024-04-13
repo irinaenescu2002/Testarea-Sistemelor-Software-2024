@@ -1,6 +1,7 @@
 package ro.boa.clinic.integration;
 
 import jakarta.transaction.Transactional;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -241,8 +242,17 @@ public class TicketControllerPatientTest {
             null
         );
 
+        String expectedJson = new JSONObject()
+                .put("id", ticket.getId())
+                .put("title", newTicketTitle)
+                .put("description", newTicketDescription)
+                .put("specialization", ticket.getSpecialization())
+                .put("status", newTicketStatus)
+                .put("response", null)
+                .toString();
+
         mockMvc.perform(requestTester.authenticatedPatch("/tickets/" + ticket.getId(), updateDto))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk()).andExpect(content().json(expectedJson));
 
         assertEquals(newTicketTitle, ticket.getTitle());
         assertEquals(newTicketDescription, ticket.getDescription());
