@@ -1,0 +1,179 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SpecializationService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ro.boa.clinic.service</a>
+</div>
+
+<h1>Coverage Summary for Class: SpecializationService (ro.boa.clinic.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SpecializationService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.5%
+  </span>
+  <span class="absValue">
+    (1/22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ro.boa.clinic.service;
+&nbsp;
+&nbsp;import com.theokanning.openai.OpenAiHttpException;
+&nbsp;import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+&nbsp;import com.theokanning.openai.completion.chat.ChatCompletionResult;
+&nbsp;import com.theokanning.openai.completion.chat.ChatMessage;
+&nbsp;import com.theokanning.openai.completion.chat.ChatMessageRole;
+&nbsp;import com.theokanning.openai.service.OpenAiService;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import ro.boa.clinic.repository.DoctorRepository;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;@Service
+&nbsp;public class SpecializationService {
+&nbsp;    @Value(&quot;${openai.key}&quot;)
+&nbsp;    private String openAiKey;
+&nbsp;
+&nbsp;    private final DoctorRepository doctorRepository;
+&nbsp;
+&nbsp;    private final static String SETUP_PROMPT =
+&nbsp;        &quot;You are a medical specialization extractor. You will receive a description of symptoms, and you will respond&quot; +
+&nbsp;            &quot; only with a specialization that best matches the description. You can only choose a specialization from&quot; +
+&nbsp;            &quot; the list that I provide. If none of the specializations match, respond simply \&quot;null\&quot;. The list of &quot; +
+&nbsp;            &quot;specializations from which you can choose is: &quot;;
+&nbsp;
+&nbsp;    public List&lt;String&gt; getSpecializations() {
+<b class="nc">&nbsp;        return doctorRepository.listAllSpecializations();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Optional&lt;String&gt; detectSpecialization(String description) {
+<b class="nc">&nbsp;        OpenAiService service = new OpenAiService(openAiKey);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;String&gt; possibleSpecializations = listAllSpecializations();</b>
+&nbsp;
+<b class="nc">&nbsp;        ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()</b>
+<b class="nc">&nbsp;            .model(&quot;gpt-3.5-turbo&quot;)</b>
+<b class="nc">&nbsp;            .messages(buildModelSetupMessages(possibleSpecializations, description))</b>
+<b class="nc">&nbsp;            .build();</b>
+&nbsp;
+&nbsp;        try {
+<b class="nc">&nbsp;            ChatCompletionResult result = service.createChatCompletion(completionRequest);</b>
+<b class="nc">&nbsp;            String response = result.getChoices().getFirst().getMessage().getContent();</b>
+<b class="nc">&nbsp;            return possibleSpecializations.contains(response) ? Optional.of(response) : Optional.empty();</b>
+<b class="nc">&nbsp;        } catch (OpenAiHttpException e) {</b>
+<b class="nc">&nbsp;            return Optional.empty();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;String&gt; listAllSpecializations() {
+<b class="nc">&nbsp;        return doctorRepository.listAllSpecializations();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private List&lt;ChatMessage&gt; buildModelSetupMessages(List&lt;String&gt; specializations, String description) {
+<b class="nc">&nbsp;        String specializationList = String.join(&quot;, &quot;, specializations);</b>
+&nbsp;
+<b class="nc">&nbsp;        List&lt;ChatMessage&gt; MODEL_SETUP_MESSAGES = List.of(</b>
+<b class="nc">&nbsp;            new ChatMessage(ChatMessageRole.SYSTEM.value(), SETUP_PROMPT + specializationList),</b>
+&nbsp;            new ChatMessage(
+<b class="nc">&nbsp;                ChatMessageRole.USER.value(),</b>
+&nbsp;                &quot;I feel pain in my right ear. It&#39;s pulsating and hurts more when I lie down.&quot;
+&nbsp;            ),
+<b class="nc">&nbsp;            new ChatMessage(ChatMessageRole.ASSISTANT.value(), &quot;otolaryngology&quot;)</b>
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        ArrayList&lt;ChatMessage&gt; systemMessages = new ArrayList&lt;&gt;(MODEL_SETUP_MESSAGES);</b>
+<b class="nc">&nbsp;        systemMessages.add(new ChatMessage(ChatMessageRole.USER.value(), description));</b>
+&nbsp;
+<b class="nc">&nbsp;        return systemMessages;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-15 13:18</div>
+</div>
+</body>
+</html>

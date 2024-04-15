@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AccountService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ro.boa.clinic.service</a>
+</div>
+
+<h1>Coverage Summary for Class: AccountService (ro.boa.clinic.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AccountService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    11.1%
+  </span>
+  <span class="absValue">
+    (1/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.3%
+  </span>
+  <span class="absValue">
+    (1/19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ro.boa.clinic.service;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.dao.DataIntegrityViolationException;
+&nbsp;import org.springframework.security.authentication.AnonymousAuthenticationToken;
+&nbsp;import org.springframework.security.core.Authentication;
+&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import ro.boa.clinic.exception.AccountDoesNotExist;
+&nbsp;import ro.boa.clinic.model.Account;
+&nbsp;import ro.boa.clinic.model.Profile;
+&nbsp;import ro.boa.clinic.model.Role;
+&nbsp;import ro.boa.clinic.repository.AccountRepository;
+&nbsp;
+&nbsp;import java.util.Optional;
+&nbsp;
+<b class="nc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;public class AccountService {
+&nbsp;    private final AccountRepository accountRepository;
+&nbsp;    private final PasswordEncoder passwordEncoder;
+&nbsp;
+&nbsp;    public Account createDoctorAccount(String email, String password) throws DataIntegrityViolationException {
+<b class="nc">&nbsp;        return createAccount(email, password, Role.DOCTOR);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Account createPatientAccount(String email, String password) throws DataIntegrityViolationException {
+<b class="nc">&nbsp;        return createAccount(email, password, Role.PATIENT);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param email    the email address of the account
+&nbsp;     * @param password the plain text password
+&nbsp;     * @return the created account entity
+&nbsp;     * @throws DataIntegrityViolationException the email address is likely already used
+&nbsp;     */
+&nbsp;    public Account createAccount(String email, String password, Role role) throws DataIntegrityViolationException {
+<b class="nc">&nbsp;        log.info(&quot;Creating a new account&quot;);</b>
+<b class="nc">&nbsp;        final String hashedPassword = passwordEncoder.encode(password);</b>
+<b class="nc">&nbsp;        Account newAccount = new Account(email, hashedPassword, role);</b>
+&nbsp;
+<b class="nc">&nbsp;        return accountRepository.save(newAccount);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Optional&lt;Account&gt; findAccountByEmail(String email) {
+<b class="nc">&nbsp;        return accountRepository.findByEmail(email);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getAuthenticatedUserEmail() {
+<b class="nc">&nbsp;        log.info(&quot;Getting authenticated user account&quot;);</b>
+<b class="nc">&nbsp;        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</b>
+<b class="nc">&nbsp;        if (!(authentication instanceof AnonymousAuthenticationToken)) {</b>
+<b class="nc">&nbsp;            return authentication.getName();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Account getAuthenticatedUserAccount() {
+<b class="nc">&nbsp;        log.info(&quot;Getting authenticated user account&quot;);</b>
+<b class="nc">&nbsp;        return accountRepository.findByEmail(getAuthenticatedUserEmail()).orElseThrow(AccountDoesNotExist::new);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Links the account with the provided email to the profile, if the account has no profile associated.
+&nbsp;     *
+&nbsp;     * @param profile the profile to link
+&nbsp;     * @param email   the email of the account to link
+&nbsp;     * @return whether the profile was actually linked
+&nbsp;     */
+&nbsp;    public boolean linkProfileToAccount(Profile profile, String email) {
+<b class="nc">&nbsp;        log.info(&quot;Linking profile to account&quot;);</b>
+<b class="nc">&nbsp;        var updatedRowsCount = accountRepository.updateProfileIfUnset(email, profile);</b>
+<b class="nc">&nbsp;        return updatedRowsCount &gt; 0;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-15 13:22</div>
+</div>
+</body>
+</html>

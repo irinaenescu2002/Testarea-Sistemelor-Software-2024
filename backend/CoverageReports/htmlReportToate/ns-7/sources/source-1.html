@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Seeder</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ro.boa.clinic.runner</a>
+</div>
+
+<h1>Coverage Summary for Class: Seeder (ro.boa.clinic.runner)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Seeder</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (30/30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ro.boa.clinic.runner;
+&nbsp;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.boot.ApplicationArguments;
+&nbsp;import org.springframework.boot.ApplicationRunner;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import ro.boa.clinic.model.Sex;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;@Component
+&nbsp;public class Seeder implements ApplicationRunner {
+&nbsp;    private final SeederHelper seederHelper;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void run(ApplicationArguments args) {
+<b class="fc">&nbsp;        var emmaJohnson = seederHelper.createPatientAccountAndProfile(</b>
+<b class="fc">&nbsp;                &quot;Emma&quot;, &quot;Johnson&quot;, Sex.FEMALE, LocalDate.of(1985, 1, 15));</b>
+<b class="fc">&nbsp;        var ethanSmith = seederHelper.createPatientAccountAndProfile(</b>
+<b class="fc">&nbsp;                &quot;Ethan Liam&quot;, &quot;Smith&quot;, Sex.MALE, LocalDate.of(1992, 5, 18));</b>
+<b class="fc">&nbsp;        var oliviaWilliams = seederHelper.createPatientAccountAndProfile(</b>
+<b class="fc">&nbsp;                &quot;Olivia&quot;, &quot;Williams&quot;, Sex.FEMALE, LocalDate.of(1988, 11, 30));</b>
+<b class="fc">&nbsp;        var noahDavid = seederHelper.createPatientAccountAndProfile(</b>
+<b class="fc">&nbsp;                &quot;Noah John&quot;, &quot;Davis&quot;, Sex.MALE, LocalDate.of(2000, 6, 8));</b>
+&nbsp;
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Sarah&quot;, &quot;Anderson&quot;, &quot;Cardiology&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Michael&quot;, &quot;Roberts&quot;, &quot;Pediatrics&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Emily&quot;, &quot;Davis&quot;, &quot;Neurology&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Natalie&quot;, &quot;Brown&quot;, &quot;Cardiology&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;James&quot;, &quot;Miller&quot;, &quot;Orthopedic Surgery&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Lauren&quot;, &quot;Taylor&quot;, &quot;Dermatologist&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Benjamin&quot;, &quot;Carter&quot;, &quot;Psychiatry&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Sophia&quot;, &quot;Lewis&quot;, &quot;Obstetrics/Gynecology&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;David&quot;, &quot;Martinez&quot;, &quot;Cardiology&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Ryan&quot;, &quot;Anderson&quot;, &quot;Neurology&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Justin&quot;, &quot;Johnson&quot;, &quot;Dermatology&quot;);</b>
+<b class="fc">&nbsp;        seederHelper.createDoctorAccountAndProfile(&quot;Alex&quot;, &quot;Turner&quot;, &quot;Gastroenterology&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;        seederHelper.createTicket(oliviaWilliams, &quot;Chest Pain&quot;,</b>
+&nbsp;                &quot;I experience sharp chest pain after physical activity&quot;, &quot;Cardiology&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(emmaJohnson, &quot;Child&#39;s Persistent Cough&quot;,</b>
+&nbsp;                &quot;My child has been coughing persistently for a week&quot;, &quot;Pediatrics&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(emmaJohnson, &quot;Chronic Headaches&quot;,</b>
+&nbsp;                &quot;I suffer from chronic headaches and migraines&quot;, &quot;Neurology&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(emmaJohnson, &quot;Joint Pain and Stiffness&quot;,</b>
+&nbsp;                &quot;I have been experiencing joint pain and stiffness in my knees&quot;, &quot;Orthopedic Surgery&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(oliviaWilliams, &quot;Acne Troubles&quot;,</b>
+&nbsp;                &quot;I&#39;ve been struggling with persistent acne breakouts&quot;, &quot;Dermatology&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(noahDavid, &quot;Skin Rash&quot;,</b>
+&nbsp;                &quot;I have developed a rash on my arms and need assistance&quot;, &quot;Dermatology&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(oliviaWilliams, &quot;Menstrual Irregularities&quot;,</b>
+&nbsp;                &quot;I am experiencing irregularities in my menstrual cycle&quot;, &quot;Obstetrics/Gynecology&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(ethanSmith, &quot;Anxiety and Sleep Issues&quot;,</b>
+&nbsp;                &quot;I am struggling with anxiety and facing difficulties with sleep&quot;, &quot;Psychiatry&quot;);
+<b class="fc">&nbsp;        seederHelper.createTicket(ethanSmith, &quot;Digestive Discomfort&quot;,</b>
+&nbsp;                &quot;I am experiencing discomfort in my stomach after eating fried potatoes&quot;, &quot;Gastroenterology&quot;);
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-15 13:25</div>
+</div>
+</body>
+</html>

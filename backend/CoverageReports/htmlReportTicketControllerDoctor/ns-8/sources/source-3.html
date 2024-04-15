@@ -1,0 +1,165 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > PatientService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ro.boa.clinic.service</a>
+</div>
+
+<h1>Coverage Summary for Class: PatientService (ro.boa.clinic.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PatientService</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    47.1%
+  </span>
+  <span class="absValue">
+    (8/17)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PatientService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    47.1%
+  </span>
+  <span class="absValue">
+    (8/17)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ro.boa.clinic.service;
+&nbsp;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import lombok.NonNull;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import ro.boa.clinic.exception.AccountAlreadyHasProfile;
+&nbsp;import ro.boa.clinic.exception.PatientProfileNotFoundException;
+&nbsp;import ro.boa.clinic.model.Account;
+&nbsp;import ro.boa.clinic.model.Patient;
+&nbsp;import ro.boa.clinic.model.Sex;
+&nbsp;import ro.boa.clinic.repository.PatientRepository;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Optional;
+&nbsp;
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;public class PatientService {
+&nbsp;    private final PatientRepository patientRepository;
+&nbsp;    private final AccountService accountService;
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public Patient createPatientProfile(String firstName, String lastName, Sex sex, LocalDate birthdate,
+&nbsp;                                        String accountEmail) {
+<b class="fc">&nbsp;        log.info(&quot;Creating a new patient profile&quot;);</b>
+<b class="fc">&nbsp;        var patient = new Patient(firstName, lastName, sex, birthdate);</b>
+<b class="fc">&nbsp;        var patientCreated = patientRepository.save(patient);</b>
+<b class="fc">&nbsp;        boolean wasLinked = accountService.linkProfileToAccount(patientCreated, accountEmail);</b>
+<b class="fc">&nbsp;        if (!wasLinked) {</b>
+<b class="nc">&nbsp;            throw new AccountAlreadyHasProfile();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return patientCreated;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Patient getAuthenticatedPatientProfile() {
+<b class="nc">&nbsp;        log.info(&quot;Getting authenticated patient profile&quot;);</b>
+<b class="nc">&nbsp;        var userEmail = accountService.getAuthenticatedUserEmail();</b>
+<b class="nc">&nbsp;        var patientProfile = patientRepository.findPatientProfileByEmail(userEmail);</b>
+<b class="nc">&nbsp;        if (patientProfile == null) {</b>
+<b class="nc">&nbsp;            throw new PatientProfileNotFoundException();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return patientProfile;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public Optional&lt;Patient&gt; getPatientProfileForAccount(@NonNull Account account) {</b>
+<b class="nc">&nbsp;        return Optional.ofNullable(patientRepository.findPatientProfileByEmail(account.getEmail()));</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-13 17:34</div>
+</div>
+</body>
+</html>
