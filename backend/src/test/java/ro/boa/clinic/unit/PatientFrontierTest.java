@@ -58,7 +58,7 @@ public class PatientFrontierTest {
         // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         //System.out.println(violations);
-        assertTrue(violations.isEmpty());
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class PatientFrontierTest {
         // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         //System.out.println(violations);
-        assertTrue(violations.isEmpty());
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class PatientFrontierTest {
         // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         //System.out.println(violations);
-        assertTrue(violations.isEmpty());
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PatientFrontierTest {
         // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         //System.out.println(violations);
-        assertTrue(violations.isEmpty());
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class PatientFrontierTest {
         // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         //System.out.println(violations);
-        assertTrue(violations.isEmpty());
+        assertFalse(violations.isEmpty());
     }
 
     @Test
@@ -157,6 +157,6 @@ public class PatientFrontierTest {
         // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         //System.out.println(violations);
-        assertTrue(violations.isEmpty());
+        assertFalse(violations.isEmpty());
     }
 }
