@@ -51,13 +51,10 @@ public class PatientFrontierTest {
         var accountEmail = "john@example.com";
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
-        // Create a Validator instance
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        var factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        //System.out.println(violations);
         assertFalse(violations.isEmpty());
     }
 
@@ -70,19 +67,15 @@ public class PatientFrontierTest {
         var accountEmail = "john@example.com";
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
-        // Create a Validator instance
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        var factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        //System.out.println(violations);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     public void InBetween2and20() {
-        // Given
         var firstName = "John";
         var lastName = "Doe";
         var sex = Sex.MALE;
@@ -90,19 +83,15 @@ public class PatientFrontierTest {
         var accountEmail = "john@example.com";
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
-        // Create a Validator instance
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        var factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        //System.out.println(violations);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     public void EqualTo20() {
-        // Given
         var firstName = "Keannaemilyelizebeth";
         var lastName = "Doe";
         var sex = Sex.MALE;
@@ -110,19 +99,15 @@ public class PatientFrontierTest {
         var accountEmail = "john@example.com";
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
-        // Create a Validator instance
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        var factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        //System.out.println(violations);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     public void LongerThan20() {
-        // Given
         var firstName = "Keannaemilyelizebeths";
         var lastName = "Doe";
         var sex = Sex.MALE;
@@ -130,19 +115,15 @@ public class PatientFrontierTest {
         var accountEmail = "john@example.com";
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
-        // Create a Validator instance
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        var factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // Trigger validation
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        //System.out.println(violations);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     public void ContaintsNumbers() {
-        // Given
         var firstName = "John the 2-nd";
         var lastName = "Doe";
         var sex = Sex.MALE;
@@ -150,13 +131,10 @@ public class PatientFrontierTest {
         var accountEmail = "john@example.com";
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
-        // Create a Validator instance
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        var factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-
-        // Trigger validation
+        
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        //System.out.println(violations);
         assertFalse(violations.isEmpty());
     }
 }
