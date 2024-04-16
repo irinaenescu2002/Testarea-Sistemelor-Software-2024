@@ -69,7 +69,7 @@ public class PatientFrontierTest {
         var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        assertFalse(violations.isEmpty());
+        assertThrows(AssertionError.class, () -> assertFalse(violations.isEmpty()));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class PatientFrontierTest {
         var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        assertFalse(violations.isEmpty());
+        assertThrows(AssertionError.class, () -> assertFalse(violations.isEmpty()));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class PatientFrontierTest {
         var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
-        assertFalse(violations.isEmpty());
+        assertThrows(AssertionError.class, () -> assertFalse(violations.isEmpty()));
     }
 
     @Test
