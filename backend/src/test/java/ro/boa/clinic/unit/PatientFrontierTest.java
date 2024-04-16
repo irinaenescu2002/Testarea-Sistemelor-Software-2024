@@ -2,8 +2,7 @@ package ro.boa.clinic.unit;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +14,6 @@ import ro.boa.clinic.model.Sex;
 import ro.boa.clinic.repository.PatientRepository;
 import ro.boa.clinic.service.AccountService;
 import ro.boa.clinic.service.PatientService;
-import org.junit.jupiter.api.Assertions;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,12 +36,12 @@ public class PatientFrontierTest {
     // Doesn't Contain Numbers and Does Contain Numbers
     //The second class of equivalence is not relevant, since names can't contain numbers
     //But the first class is split amongst 3 more equivalence classes
-    //Those are: a first name shoter than 2, a first name longer or equal to 2, but shorter or equal to 20
+    //Those are: a first name shorter than 2, a first name longer or equal to 2, but shorter or equal to 20
     //And a first name longer than 20. A test from each of those classes should be sufficient for the firstName.
 
 
     @Test
-    public void ShoterThan2() {
+    public void ShorterThan2() {
         var firstName = "A";
         var lastName = "Doe";
         var sex = Sex.MALE;
@@ -52,7 +50,7 @@ public class PatientFrontierTest {
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
         var factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         assertFalse(violations.isEmpty());
@@ -68,7 +66,7 @@ public class PatientFrontierTest {
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
         var factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         assertFalse(violations.isEmpty());
@@ -84,7 +82,7 @@ public class PatientFrontierTest {
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
         var factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         assertFalse(violations.isEmpty());
@@ -100,7 +98,7 @@ public class PatientFrontierTest {
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
         var factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         assertFalse(violations.isEmpty());
@@ -116,14 +114,14 @@ public class PatientFrontierTest {
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
         var factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        var validator = factory.getValidator();
 
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         assertFalse(violations.isEmpty());
     }
 
     @Test
-    public void ContaintsNumbers() {
+    public void ContainsNumbers() {
         var firstName = "John the 2-nd";
         var lastName = "Doe";
         var sex = Sex.MALE;
@@ -132,7 +130,7 @@ public class PatientFrontierTest {
         var patient = new Patient(firstName, lastName, sex, birthdate);
 
         var factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+        var validator = factory.getValidator();
         
         Set<ConstraintViolation<Patient>> violations = validator.validate(patient);
         assertFalse(violations.isEmpty());
