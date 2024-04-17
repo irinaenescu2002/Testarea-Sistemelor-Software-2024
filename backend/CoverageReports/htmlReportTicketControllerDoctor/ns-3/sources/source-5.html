@@ -1,0 +1,159 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TicketController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ro.boa.clinic.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: TicketController (ro.boa.clinic.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TicketController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (5/10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ro.boa.clinic.controller;
+&nbsp;
+&nbsp;import jakarta.validation.Valid;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.security.access.prepost.PreAuthorize;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import ro.boa.clinic.dto.TicketCreationRequestDto;
+&nbsp;import ro.boa.clinic.dto.TicketResponseDto;
+&nbsp;import ro.boa.clinic.dto.TicketUpdateRequestDto;
+&nbsp;import ro.boa.clinic.model.Status;
+&nbsp;import ro.boa.clinic.service.PatientService;
+&nbsp;import ro.boa.clinic.service.TicketService;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class TicketController {
+&nbsp;    private final TicketService ticketService;
+&nbsp;    private final PatientService patientService;
+&nbsp;
+&nbsp;    @PostMapping(value = &quot;/tickets&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ROLE_PATIENT&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;HttpStatus&gt; createTicket(@RequestBody TicketCreationRequestDto ticketCreationRequest) {
+<b class="nc">&nbsp;        var patient = patientService.getAuthenticatedPatientProfile();</b>
+<b class="nc">&nbsp;        ticketService.createTicket(ticketCreationRequest, patient);</b>
+<b class="nc">&nbsp;        return new ResponseEntity&lt;&gt;(HttpStatus.CREATED);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(value = &quot;/tickets/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ROLE_PATIENT&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;TicketResponseDto&gt; getTicketDetails(@PathVariable Long id) {
+<b class="fc">&nbsp;        var ticketDetails = ticketService.getTicketDetails(id);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(ticketDetails);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(value = &quot;/tickets&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ROLE_PATIENT&#39;) || hasRole(&#39;ROLE_DOCTOR&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;List&lt;TicketResponseDto&gt;&gt; getAllTickets(@RequestParam Optional&lt;Status&gt; status) {
+&nbsp;
+<b class="nc">&nbsp;        var tickets = ticketService.getAuthenticatedUserTickets(status);</b>
+<b class="nc">&nbsp;        return ResponseEntity.ok(tickets);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PatchMapping(value = &quot;/tickets/{id}&quot;)
+&nbsp;    @PreAuthorize(&quot;hasRole(&#39;ROLE_PATIENT&#39;) || hasRole(&#39;ROLE_DOCTOR&#39;)&quot;)
+&nbsp;    public ResponseEntity&lt;TicketResponseDto&gt; updateTicket(@PathVariable Long id, @Valid @RequestBody TicketUpdateRequestDto ticketUpdateRequest) {
+<b class="fc">&nbsp;        var updatedTicket = ticketService.updateTicketAuthenticatedUser(id, ticketUpdateRequest);</b>
+<b class="fc">&nbsp;        return ResponseEntity.ok(updatedTicket);</b>
+&nbsp;    }
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-13 17:34</div>
+</div>
+</body>
+</html>

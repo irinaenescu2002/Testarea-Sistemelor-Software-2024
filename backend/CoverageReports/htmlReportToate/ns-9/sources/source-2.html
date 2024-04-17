@@ -1,0 +1,92 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DoctorRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ro.boa.clinic.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: DoctorRepository (ro.boa.clinic.repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DoctorRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ro.boa.clinic.repository;
+&nbsp;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.CrudRepository;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;import ro.boa.clinic.model.Doctor;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface DoctorRepository extends CrudRepository&lt;Doctor, Long&gt; {
+&nbsp;    @Query(&quot;select specialization from Doctor group by specialization&quot;)
+&nbsp;    List&lt;String&gt; listAllSpecializations();
+&nbsp;
+&nbsp;    boolean existsDoctorBySpecialization(@Param(&quot;specialization&quot;) String specialization);
+&nbsp;
+&nbsp;    @Query(&quot;SELECT d FROM Doctor d JOIN Account a ON d.id = a.profile.id WHERE a.email = :email&quot;)
+&nbsp;    Doctor findDoctorProfileByEmail(@Param(&quot;email&quot;) String email);
+&nbsp;
+&nbsp;    @Query(&quot;FROM Doctor d WHERE d.specialization = :specialization ORDER BY &quot; +
+&nbsp;            &quot;(SELECT COUNT(t.id) FROM Ticket t WHERE t.doctor IS NOT NULL AND t.status = &#39;OPENED&#39; AND  t.doctor = d) &quot; +
+&nbsp;            &quot;ASC LIMIT 1&quot;)
+&nbsp;    Doctor findFreestDoctorBySpecialization(@Param(&quot;specialization&quot;) String specialization);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-15 13:25</div>
+</div>
+</body>
+</html>

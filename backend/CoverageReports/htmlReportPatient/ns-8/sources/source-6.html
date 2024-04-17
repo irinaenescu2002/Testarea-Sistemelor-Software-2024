@@ -1,0 +1,332 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > TicketService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ro.boa.clinic.service</a>
+</div>
+
+<h1>Coverage Summary for Class: TicketService (ro.boa.clinic.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TicketService</td>
+<td class="coverageStat">
+  <span class="percent">
+    35.7%
+  </span>
+  <span class="absValue">
+    (5/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.6%
+  </span>
+  <span class="absValue">
+    (12/88)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TicketService$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">TicketService$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (5/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    13.5%
+  </span>
+  <span class="absValue">
+    (12/89)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ro.boa.clinic.service;
+&nbsp;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import ro.boa.clinic.dto.*;
+&nbsp;import ro.boa.clinic.exception.DoctorSpecializationNotFound;
+&nbsp;import ro.boa.clinic.exception.TicketNotFoundException;
+&nbsp;import ro.boa.clinic.exception.UnauthorizedAccessException;
+&nbsp;import ro.boa.clinic.model.Doctor;
+&nbsp;import ro.boa.clinic.model.Patient;
+&nbsp;import ro.boa.clinic.model.Status;
+&nbsp;import ro.boa.clinic.model.Ticket;
+&nbsp;import ro.boa.clinic.repository.TicketRepository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j</b>
+<b class="fc">&nbsp;@RequiredArgsConstructor</b>
+&nbsp;public class TicketService {
+&nbsp;    private final TicketRepository ticketRepository;
+&nbsp;    private final DoctorService doctorService;
+&nbsp;    private final PatientService patientService;
+&nbsp;    private final AccountService accountService;
+&nbsp;
+&nbsp;    private boolean validateSpecialization(String specialization) {
+<b class="fc">&nbsp;        return doctorService.checkSpecializationExists(specialization);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public Ticket createTicket(TicketCreationRequestDto ticketCreationRequest, Patient patient, Doctor assignedDoctor) {
+<b class="fc">&nbsp;        if (!validateSpecialization(ticketCreationRequest.specialization())) {</b>
+<b class="nc">&nbsp;            throw new DoctorSpecializationNotFound();</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        log.info(&quot;Creating a new ticket&quot;);</b>
+<b class="fc">&nbsp;        var ticket = new Ticket(assignedDoctor,</b>
+&nbsp;                                patient,
+<b class="fc">&nbsp;                                ticketCreationRequest.title(),</b>
+<b class="fc">&nbsp;                                ticketCreationRequest.description(),</b>
+<b class="fc">&nbsp;                                ticketCreationRequest.specialization(),</b>
+&nbsp;                                Status.OPENED);
+<b class="fc">&nbsp;        return ticketRepository.save(ticket);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    public Ticket createTicket(TicketCreationRequestDto ticketCreationRequest, Patient patient) {
+<b class="fc">&nbsp;        var freestDoctor = doctorService.findFreestDoctorBySpecialization(ticketCreationRequest.specialization());</b>
+<b class="fc">&nbsp;        return createTicket(ticketCreationRequest, patient, freestDoctor);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public TicketResponseDto getTicketDetails(Long id) {
+<b class="nc">&nbsp;        var ticket = ticketRepository.findById(id).orElseThrow(TicketNotFoundException::new);</b>
+<b class="nc">&nbsp;        var currentRole = accountService.getAuthenticatedUserAccount().getRole();</b>
+<b class="nc">&nbsp;        log.info(&quot;Returning ticket details&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (currentRole) {</b>
+&nbsp;            case PATIENT -&gt; {
+<b class="nc">&nbsp;                if (isTicketOwnedByLoggedInPatient(ticket)) {</b>
+<b class="nc">&nbsp;                    return convertTicketToPatientTicketDto(ticket);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                throw new TicketNotFoundException();</b>
+&nbsp;            }
+&nbsp;            case DOCTOR -&gt; {
+<b class="nc">&nbsp;                if (isTicketOwnedByLoggedInDoctor(ticket)) {</b>
+<b class="nc">&nbsp;                    return convertTicketToDoctorTicketDto(ticket);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                throw new TicketNotFoundException();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            default -&gt; throw new UnauthorizedAccessException();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Optional&lt;Ticket&gt; findWithDoctorByTitle(String title) {
+<b class="nc">&nbsp;        return ticketRepository.findWithDoctorByTitle(title);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isTicketOwnedByLoggedInPatient(Ticket ticket) {
+<b class="nc">&nbsp;        log.info(&quot;Checking that the id of the logged-in patient is the same as &quot; +</b>
+&nbsp;                &quot;the id of the patient associated with the ticket&quot;);
+<b class="nc">&nbsp;        var patientProfile = patientService.getAuthenticatedPatientProfile();</b>
+<b class="nc">&nbsp;        return patientProfile.getId().equals(ticket.getPatient().getId());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean isTicketOwnedByLoggedInDoctor(Ticket ticket) {
+<b class="nc">&nbsp;        log.info(&quot;Checking that the id of the logged-in doctor is the same as &quot; +</b>
+&nbsp;                &quot;the id of the doctor associated with the ticket&quot;);
+<b class="nc">&nbsp;        var doctorProfile = doctorService.getAuthenticatedDoctorProfile();</b>
+<b class="nc">&nbsp;        return ticket.getDoctor() != null &amp;&amp; doctorProfile.getId().equals(ticket.getDoctor().getId());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public TicketResponseDto updateTicketAuthenticatedUser(Long id, TicketUpdateRequestDto ticketUpdateRequest) {
+<b class="nc">&nbsp;        var role = accountService.getAuthenticatedUserAccount().getRole();</b>
+&nbsp;
+<b class="nc">&nbsp;        var ticket = ticketRepository.findById(id);</b>
+<b class="nc">&nbsp;        Ticket existingTicket = ticket.orElseThrow(TicketNotFoundException::new);</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (role) {</b>
+&nbsp;            case PATIENT -&gt; {
+<b class="nc">&nbsp;                if (!isTicketOwnedByLoggedInPatient(existingTicket)) {</b>
+<b class="nc">&nbsp;                    throw new TicketNotFoundException();</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;            case DOCTOR -&gt; {
+<b class="nc">&nbsp;                if (!isTicketOwnedByLoggedInDoctor(existingTicket)) {</b>
+<b class="nc">&nbsp;                    throw new TicketNotFoundException();</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        log.info(&quot;Updating the ticket&quot;);</b>
+<b class="nc">&nbsp;        ticketUpdateRequest.status().ifPresent(status -&gt; existingTicket.setStatus(Status.valueOf(status)));</b>
+&nbsp;
+<b class="nc">&nbsp;        switch (role) {</b>
+&nbsp;            case PATIENT -&gt; {
+<b class="nc">&nbsp;                ticketUpdateRequest.description().ifPresent(existingTicket::setDescription);</b>
+<b class="nc">&nbsp;                ticketUpdateRequest.title().ifPresent(existingTicket::setTitle);</b>
+&nbsp;
+<b class="nc">&nbsp;                return convertTicketToPatientTicketDto(ticketRepository.save(existingTicket));</b>
+&nbsp;            }
+&nbsp;            case DOCTOR -&gt; {
+<b class="nc">&nbsp;                ticketUpdateRequest.specialization().ifPresent(specialization -&gt; {</b>
+<b class="nc">&nbsp;                    if (specialization.equals(existingTicket.getSpecialization())) {</b>
+&nbsp;                        return;
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (!validateSpecialization(specialization)) {</b>
+<b class="nc">&nbsp;                        throw new DoctorSpecializationNotFound();</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    existingTicket.setDoctor(doctorService.findFreestDoctorBySpecialization(specialization));</b>
+&nbsp;                });
+&nbsp;
+<b class="nc">&nbsp;                ticketUpdateRequest.specialization().ifPresent(existingTicket::setSpecialization);</b>
+<b class="nc">&nbsp;                ticketUpdateRequest.response().ifPresent(existingTicket::setResponse);</b>
+<b class="nc">&nbsp;                return convertTicketToDoctorTicketDto(ticketRepository.save(existingTicket));</b>
+&nbsp;            }
+<b class="nc">&nbsp;            default -&gt; throw new UnauthorizedAccessException();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;TicketResponseDto&gt; getAuthenticatedUserTickets(Optional&lt;Status&gt; status) {
+<b class="nc">&nbsp;        var role = accountService.getAuthenticatedUserAccount().getRole();</b>
+<b class="nc">&nbsp;        switch (role) {</b>
+&nbsp;            case PATIENT -&gt; {
+<b class="nc">&nbsp;                var patient = patientService.getAuthenticatedPatientProfile();</b>
+&nbsp;
+&nbsp;                List&lt;Ticket&gt; tickets;
+<b class="nc">&nbsp;                if (status.isEmpty()) {</b>
+<b class="nc">&nbsp;                    tickets = ticketRepository.getTicketsWithDoctorByPatient(patient);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    tickets = ticketRepository.getTicketsWithDoctorByPatientAndStatus(patient, status.get());</b>
+&nbsp;                }
+<b class="nc">&nbsp;                return tickets.stream()</b>
+<b class="nc">&nbsp;                        .map(this::convertTicketToPatientTicketDto)</b>
+<b class="nc">&nbsp;                        .collect(Collectors.toList());</b>
+&nbsp;            }
+&nbsp;            case DOCTOR -&gt; {
+<b class="nc">&nbsp;                var doctor = doctorService.getAuthenticatedDoctorProfile();</b>
+&nbsp;
+&nbsp;                List&lt;Ticket&gt; tickets;
+<b class="nc">&nbsp;                if (status.isEmpty()) {</b>
+<b class="nc">&nbsp;                    tickets = ticketRepository.getTicketsWithPatientByDoctor(doctor);</b>
+&nbsp;                } else {
+<b class="nc">&nbsp;                    tickets = ticketRepository.getTicketsWithPatientByDoctorAndStatus(doctor, status.get());</b>
+&nbsp;                }
+<b class="nc">&nbsp;                return tickets.stream()</b>
+<b class="nc">&nbsp;                        .map(this::convertTicketToDoctorTicketDto)</b>
+<b class="nc">&nbsp;                        .collect(Collectors.toList());</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        throw new UnauthorizedAccessException();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private PatientTicketResponseDto convertTicketToPatientTicketDto(Ticket ticket) {
+<b class="nc">&nbsp;        var doctor = ticket.getDoctor();</b>
+<b class="nc">&nbsp;        String doctorName = doctor == null ? null : doctor.getFullName();</b>
+<b class="nc">&nbsp;        return new PatientTicketResponseDto(</b>
+<b class="nc">&nbsp;                ticket.getId(),</b>
+<b class="nc">&nbsp;                ticket.getTitle(),</b>
+<b class="nc">&nbsp;                ticket.getDescription(),</b>
+<b class="nc">&nbsp;                ticket.getSpecialization(),</b>
+<b class="nc">&nbsp;                ticket.getStatus(),</b>
+<b class="nc">&nbsp;                ticket.getResponse(),</b>
+&nbsp;                doctorName);
+&nbsp;    }
+&nbsp;
+&nbsp;    private DoctorTicketResponseDto convertTicketToDoctorTicketDto(Ticket ticket) {
+<b class="nc">&nbsp;        return new DoctorTicketResponseDto(</b>
+<b class="nc">&nbsp;                ticket.getId(),</b>
+<b class="nc">&nbsp;                ticket.getTitle(),</b>
+<b class="nc">&nbsp;                ticket.getDescription(),</b>
+<b class="nc">&nbsp;                ticket.getSpecialization(),</b>
+<b class="nc">&nbsp;                ticket.getStatus(),</b>
+<b class="nc">&nbsp;                ticket.getResponse(),</b>
+<b class="nc">&nbsp;                ticket.getPatient().getFullName());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-13 16:47</div>
+</div>
+</body>
+</html>
