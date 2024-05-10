@@ -6,6 +6,18 @@ echivalență, analiza valorilor de frontieră, acoperire la nivel de instrucți
 circuite independente, analiză raport creat de generatorul de mutanți, teste suplimentare pentru a
 omorî 2 dintre mutanții neechivalenți rămași în viață).
 
+# Prezentarea Proiectului
+
+> Documentatia proiectului se regaseste in sectiunea [wiki](https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/wiki).
+
+>Raportul despre folosirea unui tool de AI care ajută în timpul testării software poate fi accesat [aici](https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/wiki/03.-Raport-despre-folosirea-unui-tool-AI-%E2%80%90-chatGPT).
+
+>Prezentarea poate fi accesata [aici](https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/wiki).
+
+# Demo 
+
+https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/assets/69342294/e4da27d2-eda4-4b34-b4ad-a88b35849228
+
 # Running
 
 **Requirements:** Docker, Java 21, JWT key pair, OpenAI key  
