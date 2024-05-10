@@ -16,6 +16,7 @@ omorî 2 dintre mutanții neechivalenți rămași în viață).
 
 # Demo 
 
+https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/assets/69342294/e4da27d2-eda4-4b34-b4ad-a88b35849228
 
 # Running
 
