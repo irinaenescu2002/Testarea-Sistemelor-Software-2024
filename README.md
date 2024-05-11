@@ -12,7 +12,7 @@ omorî 2 dintre mutanții neechivalenți rămași în viață).
 
 >Raportul despre folosirea unui tool de AI care ajută în timpul testării software poate fi accesat [aici](https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/wiki/03.-Raport-despre-folosirea-unui-tool-AI-%E2%80%90-chatGPT).
 
->Prezentarea poate fi accesata [aici](https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/wiki).
+>Prezentarea poate fi accesata [aici](https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/blob/main/Testarea-Sistemelor-Software-2024-Prezentare.pdf).
 
 # Demo 
 
