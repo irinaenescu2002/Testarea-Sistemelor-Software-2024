@@ -18,6 +18,10 @@ omorî 2 dintre mutanții neechivalenți rămași în viață).
 
 https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/assets/69342294/e4da27d2-eda4-4b34-b4ad-a88b35849228
 
+
+https://github.com/irinaenescu2002/Testarea-Sistemelor-Software-2024/assets/69342294/cae0c05a-856e-4a51-8539-506e8025bd42
+
+
 # Running
 
 **Requirements:** Docker, Java 21, JWT key pair, OpenAI key  
